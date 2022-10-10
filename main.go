@@ -6,14 +6,12 @@ import (
 )
 
 func main() {
-	agency := "LASRMA"
-	appName := "Ticket Booking Application"
-	const seatsPerTrip int = 200
+	appName := "Atlantic City Train Ticket Application"
+	const seatsPerTrip uint = 200
 	var remTickets uint = 200
 	bookings := []string{}
 
-	fmt.Printf("Welcome to %v %v - Purchase and book your train tickets here.\n", agency, appName)
-	fmt.Printf("There are %v seats available and %v tickets left for sale. Book yours now!\n", seatsPerTrip, remTickets)
+	greetUser(appName, seatsPerTrip, remTickets)
 
 	for {
 		// Get user info
@@ -32,39 +30,55 @@ func main() {
 		fmt.Scan(&userTickets)
 
 		// User input validation
-		validName := len(firstName) >= 2 && len(lastName) >= 2
-		validEmail := strings.Contains(email, "@")
-		validTickets := userTickets > 0 && userTickets <= remTickets
+		validName, validEmail, validTickets := validateUsersInput(firstName, lastName, email, userTickets, remTickets)
 
 		if validName && validEmail && validTickets {
 			remTickets -= userTickets
-			bookings = append(bookings, firstName + " " + lastName)
-			
+			bookings = append(bookings, firstName+" "+lastName)
+
 			fmt.Printf("Hi %v, you have bought %d ticket(s). You will receive a confirmation email at %v.\n", firstName, userTickets, email)
 			fmt.Printf("Number of train tickets left is: %v\n", remTickets)
 
-			firstNames := []string{}
-			for _, booking := range bookings {
-				var names = strings.Fields(booking)
-				firstNames = append(firstNames, names[0])
-			}
-
-			fmt.Printf("This is the first name of our bookings are: %v\n", firstNames)
+			// Print the first names of users that paid for tickets
+			firstNames := getFirstNames(bookings)
+			fmt.Printf("The first name of customers that have paid for tickets include: %v\n", firstNames)
 
 			if remTickets == 0 {
 				fmt.Println("The tickets have been sold out. Kindly wait for the next round.")
 				break
-			} 
+			}
 		} else {
 			if !validName {
-				fmt.Println("You entered an invalid first name or second name. Please try again.")
-			} 
+				fmt.Println("Your first name or second name is too short. Please try again.")
+			}
 			if !validEmail {
 				fmt.Println("'@' symbol is missing in email. Please try again.")
-			} 
+			}
 			if !validTickets {
 				fmt.Println("You entered an invalid number of tickets. Please try again.")
 			}
 		}
 	}
+}
+
+func greetUser(app_name string, availTickets uint, ticketsLeft uint) {
+	fmt.Printf("Welcome to %v.\n", app_name)
+	fmt.Printf("There are %v tickets per trip and %v tickets are left.\n", availTickets, ticketsLeft)
+	fmt.Println("Hurry and purchase your ticket.")
+}
+
+func getFirstNames(bookings []string) []string {
+	firstNames := []string{}
+	for _, booking := range bookings {
+		var names = strings.Fields(booking)
+		firstNames = append(firstNames, names[0])
+	}
+	return firstNames
+}
+
+func validateUsersInput(firstName string, lastName string, email string, userTickets uint, remTickets uint) (bool, bool, bool) {
+	validName := len(firstName) >= 2 && len(lastName) >= 2
+	validEmail := strings.Contains(email, "@")
+	validTickets := userTickets > 0 && userTickets <= remTickets
+	return validName, validEmail, validTickets
 }

@@ -5,40 +5,21 @@ import (
 	"strings"
 )
 
-func main() {
-	appName := "Atlantic City Train Ticket Application"
-	const seatsPerTrip uint = 200
-	var remTickets uint = 200
-	bookings := []string{}
+var appName = "Atlantic City Train Ticket Application"
+const seatsPerTrip uint = 200
+var remTickets uint = 200
+var bookings = []string{}
 
-	greetUser(appName, seatsPerTrip, remTickets)
+func main() {
+	greetUser()
 
 	for {
-		// Get user info
-		var firstName string
-		var lastName string
-		var email string
-		var userTickets uint
-
-		fmt.Printf("Enter your first name: \n")
-		fmt.Scan(&firstName)
-		fmt.Printf("Enter your last name: \n")
-		fmt.Scan(&lastName)
-		fmt.Printf("Enter your email address: \n")
-		fmt.Scan(&email)
-		fmt.Printf("Welcome %v, how many tickets do you want to buy? \n", firstName)
-		fmt.Scan(&userTickets)
-
-		// User input validation
+		// User input plus validation
+		firstName, lastName, email, userTickets := getUserInput()
 		validName, validEmail, validTickets := validateUsersInput(firstName, lastName, email, userTickets, remTickets)
 
 		if validName && validEmail && validTickets {
-			remTickets -= userTickets
-			bookings = append(bookings, firstName+" "+lastName)
-
-			fmt.Printf("Hi %v, you have bought %d ticket(s). You will receive a confirmation email at %v.\n", firstName, userTickets, email)
-			fmt.Printf("Number of train tickets left is: %v\n", remTickets)
-
+			bookTickets(remTickets, userTickets, bookings, firstName, lastName, email)
 			// Print the first names of users that paid for tickets
 			firstNames := getFirstNames(bookings)
 			fmt.Printf("The first name of customers that have paid for tickets include: %v\n", firstNames)
@@ -61,9 +42,9 @@ func main() {
 	}
 }
 
-func greetUser(app_name string, availTickets uint, ticketsLeft uint) {
-	fmt.Printf("Welcome to %v.\n", app_name)
-	fmt.Printf("There are %v tickets per trip and %v tickets are left.\n", availTickets, ticketsLeft)
+func greetUser() {
+	fmt.Printf("Welcome to %v.\n", appName)
+	fmt.Printf("There are %v tickets per trip and %v tickets are left.\n", seatsPerTrip, remTickets)
 	fmt.Println("Hurry and purchase your ticket.")
 }
 
@@ -81,4 +62,30 @@ func validateUsersInput(firstName string, lastName string, email string, userTic
 	validEmail := strings.Contains(email, "@")
 	validTickets := userTickets > 0 && userTickets <= remTickets
 	return validName, validEmail, validTickets
+}
+
+func getUserInput() (string, string, string, uint) {
+	var firstName string
+	var lastName string
+	var email string
+	var userTickets uint
+
+	fmt.Printf("Enter your first name: \n")
+	fmt.Scan(&firstName)
+	fmt.Printf("Enter your last name: \n")
+	fmt.Scan(&lastName)
+	fmt.Printf("Enter your email address: \n")
+	fmt.Scan(&email)
+	fmt.Printf("Welcome %v, how many tickets do you want to buy? \n", firstName)
+	fmt.Scan(&userTickets)
+
+	return firstName, lastName, email, userTickets
+}
+
+func bookTickets(remTickets uint, userTickets uint, bookings []string, firstName string, lastName string, email string) {
+	remTickets -= userTickets
+	bookings = append(bookings, firstName+" "+lastName)
+
+	fmt.Printf("Hi %v, you have bought %d ticket(s). You will receive a confirmation email at %v.\n", firstName, userTickets, email)
+	fmt.Printf("Number of train tickets left is: %v\n", remTickets)
 }

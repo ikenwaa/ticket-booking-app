@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"booking-app/helper"
 )
 
 var appName = "Atlantic City Train Ticket Application"
@@ -16,7 +17,7 @@ func main() {
 	for {
 		// User input plus validation
 		firstName, lastName, email, userTickets := getUserInput()
-		validName, validEmail, validTickets := validateUsersInput(firstName, lastName, email, userTickets)
+		validName, validEmail, validTickets := helper.ValidateUsersInput(firstName, lastName, email, userTickets)
 
 		if validName && validEmail && validTickets {
 			bookTickets(userTickets, firstName, lastName, email)

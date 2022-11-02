@@ -16,12 +16,12 @@ func main() {
 	for {
 		// User input plus validation
 		firstName, lastName, email, userTickets := getUserInput()
-		validName, validEmail, validTickets := validateUsersInput(firstName, lastName, email, userTickets, remTickets)
+		validName, validEmail, validTickets := validateUsersInput(firstName, lastName, email, userTickets)
 
 		if validName && validEmail && validTickets {
-			bookTickets(remTickets, userTickets, bookings, firstName, lastName, email)
+			bookTickets(userTickets, firstName, lastName, email)
 			// Print the first names of users that paid for tickets
-			firstNames := getFirstNames(bookings)
+			firstNames := getFirstNames()
 			fmt.Printf("The first name of customers that have paid for tickets include: %v\n", firstNames)
 
 			if remTickets == 0 {
@@ -48,20 +48,13 @@ func greetUser() {
 	fmt.Println("Hurry and purchase your ticket.")
 }
 
-func getFirstNames(bookings []string) []string {
+func getFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
 		var names = strings.Fields(booking)
 		firstNames = append(firstNames, names[0])
 	}
 	return firstNames
-}
-
-func validateUsersInput(firstName string, lastName string, email string, userTickets uint, remTickets uint) (bool, bool, bool) {
-	validName := len(firstName) >= 2 && len(lastName) >= 2
-	validEmail := strings.Contains(email, "@")
-	validTickets := userTickets > 0 && userTickets <= remTickets
-	return validName, validEmail, validTickets
 }
 
 func getUserInput() (string, string, string, uint) {
@@ -82,7 +75,7 @@ func getUserInput() (string, string, string, uint) {
 	return firstName, lastName, email, userTickets
 }
 
-func bookTickets(remTickets uint, userTickets uint, bookings []string, firstName string, lastName string, email string) {
+func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 	remTickets -= userTickets
 	bookings = append(bookings, firstName+" "+lastName)
 

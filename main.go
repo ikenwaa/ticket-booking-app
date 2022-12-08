@@ -17,7 +17,7 @@ func main() {
 	for {
 		// User input plus validation
 		firstName, lastName, email, userTickets := getUserInput()
-		validName, validEmail, validTickets := helper.ValidateUsersInput(firstName, lastName, email, userTickets)
+		validName, validEmail, validTickets := helper.ValidateUsersInput(firstName, lastName, email, userTickets, remTickets)
 
 		if validName && validEmail && validTickets {
 			bookTickets(userTickets, firstName, lastName, email)
